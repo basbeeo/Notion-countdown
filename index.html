@@ -9,43 +9,66 @@
             align-items: center;
             height: 100vh;
             margin: 0;
-            background: transparent;
+            background: #1a1a1a;
         }
         .countdown-container {
             text-align: center;
-            padding: 20px;
-            border-radius: 12px;
-            background: rgba(255, 255, 255, 0.1);
+            padding: 30px;
+            border-radius: 16px;
+            background: rgba(30, 30, 30, 0.95);
             backdrop-filter: blur(10px);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.1);
         }
         .countdown-title {
             font-size: 1.5em;
-            margin-bottom: 15px;
-            color: #37352f;
+            margin-bottom: 20px;
+            color: #ffffff;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
         }
         .countdown {
             display: flex;
-            gap: 20px;
+            gap: 25px;
             justify-content: center;
         }
         .countdown-item {
             display: flex;
             flex-direction: column;
             align-items: center;
+            padding: 15px;
+            border-radius: 12px;
+            background: rgba(40, 40, 40, 0.8);
+            min-width: 80px;
         }
         .number {
-            font-size: 2em;
+            font-size: 2.2em;
             font-weight: bold;
-            color: #37352f;
+            color: #ffffff;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
         }
-        /* Special styling for days */
         #days {
-            color: #ff0000;
+            color: #ff4444;
+            text-shadow: 0 0 10px rgba(255, 68, 68, 0.3);
         }
         .label {
             font-size: 0.9em;
-            color: #666;
+            color: #888;
             text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-top: 5px;
+        }
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.02); }
+            100% { transform: scale(1); }
+        }
+        .countdown-item:hover {
+            transform: translateY(-2px);
+            transition: transform 0.3s ease;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+        }
+        .number.changing {
+            animation: pulse 0.5s ease-in-out;
         }
     </style>
 </head>
@@ -73,7 +96,6 @@
     </div>
 
     <script>
-        // Set the target date (New Year's Day of the next year)
         const targetDate = new Date(new Date().getFullYear() + 1, 0, 1).getTime();
 
         function updateCountdown() {
@@ -85,10 +107,22 @@
             const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
             const seconds = Math.floor((distance % (1000 * 60)) / 1000);
 
-            document.getElementById('days').textContent = String(days).padStart(2, '0');
-            document.getElementById('hours').textContent = String(hours).padStart(2, '0');
-            document.getElementById('minutes').textContent = String(minutes).padStart(2, '0');
-            document.getElementById('seconds').textContent = String(seconds).padStart(2, '0');
+            updateElement('days', days);
+            updateElement('hours', hours);
+            updateElement('minutes', minutes);
+            updateElement('seconds', seconds);
+        }
+
+        function updateElement(id, value) {
+            const element = document.getElementById(id);
+            const newValue = String(value).padStart(2, '0');
+            if (element.textContent !== newValue) {
+                element.classList.add('changing');
+                element.textContent = newValue;
+                setTimeout(() => {
+                    element.classList.remove('changing');
+                }, 500);
+            }
         }
 
         updateCountdown();
